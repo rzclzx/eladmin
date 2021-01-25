@@ -19,9 +19,7 @@ import ${package}.domain.${className};
 <#if columns??>
     <#list columns as column>
         <#if column.columnKey = 'UNI'>
-            <#if column_index = 1>
 import me.eladmin.exception.EntityExistException;
-            </#if>
         </#if>
     </#list>
 </#if>
@@ -115,11 +113,9 @@ public class ${className}ServiceImpl implements ${className}Service {
 <#if columns??>
     <#list columns as column>
         <#if column.columnKey = 'UNI'>
-        <#if column_index = 1>
-        ${className} ${changeClassName}1 = null;
-        </#if>
-        ${changeClassName}1 = ${changeClassName}Repository.findBy${column.capitalColumnName}(resources.get${column.capitalColumnName}());
-        if(${changeClassName}1 != null && !${changeClassName}1.get${pkCapitalColName}().equals(${changeClassName}.get${pkCapitalColName}())){
+        ${className} ${changeClassName}${column_index} = null;
+        ${changeClassName}${column_index} = ${changeClassName}Repository.findBy${column.capitalColumnName}(resources.get${column.capitalColumnName}());
+        if(${changeClassName}${column_index} != null && !${changeClassName}${column_index}.get${pkCapitalColName}().equals(${changeClassName}.get${pkCapitalColName}())){
             throw new EntityExistException(${className}.class,"${column.columnName}",resources.get${column.capitalColumnName}());
         }
         </#if>
