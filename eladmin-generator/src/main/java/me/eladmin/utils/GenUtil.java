@@ -126,22 +126,22 @@ public class GenUtil {
             genFile(file, template, genMap);
         }
         // 生成前端代码
-        templates = getFrontTemplateNames();
-        for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
-            String path = tempPath + "eladmin-web" + File.separator;
-            String apiPath = path + "src" + File.separator + "api" + File.separator;
-            String srcPath = path + "src" + File.separator + "views" + File.separator + genMap.get("changeClassName").toString() + File.separator;
-            String filePath = getFrontFilePath(templateName, apiPath, srcPath, genMap.get("changeClassName").toString());
-            assert filePath != null;
-            File file = new File(filePath);
-            // 如果非覆盖生成
-            if (!genConfig.getCover() && FileUtil.exist(file)) {
-                continue;
-            }
-            // 生成代码
-            genFile(file, template, genMap);
-        }
+//        templates = getFrontTemplateNames();
+//        for (String templateName : templates) {
+//            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
+//            String path = tempPath + "eladmin-web" + File.separator;
+//            String apiPath = path + "src" + File.separator + "api" + File.separator;
+//            String srcPath = path + "src" + File.separator + "views" + File.separator + genMap.get("changeClassName").toString() + File.separator;
+//            String filePath = getFrontFilePath(templateName, apiPath, srcPath, genMap.get("changeClassName").toString());
+//            assert filePath != null;
+//            File file = new File(filePath);
+//            // 如果非覆盖生成
+//            if (!genConfig.getCover() && FileUtil.exist(file)) {
+//                continue;
+//            }
+//            // 生成代码
+//            genFile(file, template, genMap);
+//        }
         return tempPath;
     }
 
@@ -166,21 +166,21 @@ public class GenUtil {
         }
 
         // 生成前端代码
-        templates = getFrontTemplateNames();
-        for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
-            String filePath = getFrontFilePath(templateName, genConfig.getApiPath(), genConfig.getPath(), genMap.get("changeClassName").toString());
-
-            assert filePath != null;
-            File file = new File(filePath);
-
-            // 如果非覆盖生成
-            if (!genConfig.getCover() && FileUtil.exist(file)) {
-                continue;
-            }
-            // 生成代码
-            genFile(file, template, genMap);
-        }
+//        templates = getFrontTemplateNames();
+//        for (String templateName : templates) {
+//            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
+//            String filePath = getFrontFilePath(templateName, genConfig.getApiPath(), genConfig.getPath(), genMap.get("changeClassName").toString());
+//
+//            assert filePath != null;
+//            File file = new File(filePath);
+//
+//            // 如果非覆盖生成
+//            if (!genConfig.getCover() && FileUtil.exist(file)) {
+//                continue;
+//            }
+//            // 生成代码
+//            genFile(file, template, genMap);
+//        }
     }
 
     // 获取模版数据
