@@ -28,9 +28,6 @@ import java.io.Serializable;
 @Data
 public class UserDto implements Serializable {
 
-    /** ID */
-    private Long userId;
-
     /** 部门名称 */
     private Long deptId;
 
@@ -78,4 +75,7 @@ public class UserDto implements Serializable {
 
     /** 更新时间 */
     private Timestamp updateTime;
+
+    /** ID */
+    private Long id;
 }

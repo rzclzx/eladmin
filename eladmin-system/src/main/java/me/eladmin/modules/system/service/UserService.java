@@ -49,10 +49,10 @@ public interface UserService {
 
     /**
      * 根据ID查询
-     * @param userId ID
+     * @param id ID
      * @return UserDto
      */
-    UserDto findById(Long userId);
+    UserDto findById(Long id);
 
     /**
     * 创建

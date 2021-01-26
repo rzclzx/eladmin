@@ -35,12 +35,6 @@ import java.io.Serializable;
 @Table(name="sys_user")
 public class User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    @ApiModelProperty(value = "ID")
-    private Long id;
-
     @Column(name = "dept_id")
     @ApiModelProperty(value = "部门名称")
     private Long deptId;
@@ -104,6 +98,12 @@ public class User implements Serializable {
     @Column(name = "update_time")
     @ApiModelProperty(value = "更新时间")
     private Timestamp updateTime;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @ApiModelProperty(value = "ID")
+    private Long id;
 
     public void copy(User source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

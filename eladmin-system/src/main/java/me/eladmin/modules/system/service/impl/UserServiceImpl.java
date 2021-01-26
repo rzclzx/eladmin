@@ -65,9 +65,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto findById(Long userId) {
-        User user = userRepository.findById(userId).orElseGet(User::new);
-        ValidationUtil.isNull(user.getId(),"User","userId",userId);
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id).orElseGet(User::new);
+        ValidationUtil.isNull(user.getId(),"User","id",id);
         return userMapper.toDto(user);
     }
 
@@ -88,14 +88,14 @@ public class UserServiceImpl implements UserService {
     public void update(User resources) {
         User user = userRepository.findById(resources.getId()).orElseGet(User::new);
         ValidationUtil.isNull( user.getId(),"User","id",resources.getId());
-        User user2 = null;
-        user2 = userRepository.findByUsername(resources.getUsername());
-        if(user2 != null && !user2.getId().equals(user.getId())){
+        User user1 = null;
+        user1 = userRepository.findByUsername(resources.getUsername());
+        if(user1 != null && !user1.getId().equals(user.getId())){
             throw new EntityExistException(User.class,"username",resources.getUsername());
         }
-        User user6 = null;
-        user6 = userRepository.findByEmail(resources.getEmail());
-        if(user6 != null && !user6.getId().equals(user.getId())){
+        User user5 = null;
+        user5 = userRepository.findByEmail(resources.getEmail());
+        if(user5 != null && !user5.getId().equals(user.getId())){
             throw new EntityExistException(User.class,"email",resources.getEmail());
         }
         user.copy(resources);
@@ -104,8 +104,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteAll(Long[] ids) {
-        for (Long userId : ids) {
-            userRepository.deleteById(userId);
+        for (Long id : ids) {
+            userRepository.deleteById(id);
         }
     }
 
