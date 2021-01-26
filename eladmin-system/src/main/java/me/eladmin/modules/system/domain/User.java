@@ -39,7 +39,7 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     @ApiModelProperty(value = "ID")
-    private Long userId;
+    private Long id;
 
     @Column(name = "dept_id")
     @ApiModelProperty(value = "部门名称")

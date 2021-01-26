@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto findById(Long userId) {
         User user = userRepository.findById(userId).orElseGet(User::new);
-        ValidationUtil.isNull(user.getUserId(),"User","userId",userId);
+        ValidationUtil.isNull(user.getId(),"User","userId",userId);
         return userMapper.toDto(user);
     }
 
@@ -86,16 +86,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(User resources) {
-        User user = userRepository.findById(resources.getUserId()).orElseGet(User::new);
-        ValidationUtil.isNull( user.getUserId(),"User","id",resources.getUserId());
+        User user = userRepository.findById(resources.getId()).orElseGet(User::new);
+        ValidationUtil.isNull( user.getId(),"User","id",resources.getId());
         User user2 = null;
         user2 = userRepository.findByUsername(resources.getUsername());
-        if(user2 != null && !user2.getUserId().equals(user.getUserId())){
+        if(user2 != null && !user2.getId().equals(user.getId())){
             throw new EntityExistException(User.class,"username",resources.getUsername());
         }
         User user6 = null;
         user6 = userRepository.findByEmail(resources.getEmail());
-        if(user6 != null && !user6.getUserId().equals(user.getUserId())){
+        if(user6 != null && !user6.getId().equals(user.getId())){
             throw new EntityExistException(User.class,"email",resources.getEmail());
         }
         user.copy(resources);
