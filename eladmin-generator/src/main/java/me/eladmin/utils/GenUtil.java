@@ -207,8 +207,6 @@ public class GenUtil {
         if (StringUtils.isNotEmpty(genConfig.getPrefix())) {
             className = StringUtils.toCapitalizeCamelCase(StrUtil.removePrefix(genConfig.getTableName(), genConfig.getPrefix()));
             changeClassName = StringUtils.toCamelCase(StrUtil.removePrefix(genConfig.getTableName(), genConfig.getPrefix()));
-            System.out.println(className);
-            System.out.println(changeClassName);
         }
         // 保存类名
         genMap.put("className", className);
