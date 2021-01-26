@@ -76,6 +76,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toCamelCase(String s) {
+
         if (s == null) {
             return null;
         }
@@ -95,6 +96,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             } else {
                 sb.append(c);
             }
+        }
+
+        if (!Character.isLowerCase(sb.charAt(0))) {
+            sb = (new StringBuilder()).append(Character.toLowerCase(sb.charAt(0))).append(sb.substring(1));
         }
 
         return sb.toString();
