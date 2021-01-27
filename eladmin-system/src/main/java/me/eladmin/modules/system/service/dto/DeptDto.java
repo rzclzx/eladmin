@@ -18,6 +18,7 @@ package me.eladmin.modules.system.service.dto;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 
 /**
 * @website https://el-admin.vip
@@ -57,4 +58,7 @@ public class DeptDto implements Serializable {
 
     /** 更新时间 */
     private Timestamp updateTime;
+
+    /** children */
+    private List<DeptDto> children;
 }

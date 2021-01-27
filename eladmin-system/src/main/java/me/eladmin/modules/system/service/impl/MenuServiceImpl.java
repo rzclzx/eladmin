@@ -51,21 +51,6 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
 
-    private List<MenuDto> getTree(Menu menu, List<Menu> allMenus) {
-        Long pid = menu.getId();
-        List<Menu> menus = allMenus.stream()
-                .filter(item -> item.getPid() == pid)
-                .collect(Collectors.toList());
-        List<MenuDto> menuDtoList = new LinkedList<>();
-        menus.forEach(item -> {
-            MenuDto menuDto = new MenuDto();
-            BeanUtils.copyProperties(item, menuDto);
-            menuDto.setChildren(getTree(item, allMenus));
-            menuDtoList.add(menuDto);
-        });
-        return menuDtoList;
-    }
-
     @Override
     public Map<String,Object> queryAll(MenuQueryCriteria criteria, Pageable pageable){
         Page<Menu> page = menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
@@ -75,17 +60,8 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDto> queryTree(MenuQueryCriteria criteria){
         List<Menu> allMenus = menuRepository.findAll();
-        List<Menu> menus = allMenus.stream()
-                .filter(item -> item.getPid() == null)
-                .collect(Collectors.toList());
-        List<MenuDto> menuList = new LinkedList<>();
-        menus.forEach(item -> {
-            MenuDto menuDto = new MenuDto();
-            BeanUtils.copyProperties(item, menuDto);
-            menuDto.setChildren(this.getTree(item, allMenus));
-            menuList.add(menuDto);
-        });
-        return menuList;
+        List<MenuDto> menus = Util.getTree(null, "pid", "children", menuMapper.toDto(allMenus));
+        return menus;
     }
 
     @Override

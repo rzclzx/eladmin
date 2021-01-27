@@ -43,7 +43,6 @@ public interface MenuService {
     /**
      * 查询数据分页(树形)
      * @param criteria 条件
-     * @param pageable 分页参数
      * @return Map<String,Object>
      */
     List<MenuDto> queryTree(MenuQueryCriteria criteria);

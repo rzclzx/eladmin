@@ -68,7 +68,7 @@ public class MenuController {
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<Object> queryTree(MenuQueryCriteria criteria, Pageable pageable){
         List<MenuDto> menuDtoList = menuService.queryTree(criteria);
-        return new ResponseEntity<>(PageUtil.toPage(menuDtoList, menuDtoList.size()),HttpStatus.OK);
+        return new ResponseEntity<>(PageUtil.page(menuDtoList, pageable),HttpStatus.OK);
     }
 
     @PostMapping

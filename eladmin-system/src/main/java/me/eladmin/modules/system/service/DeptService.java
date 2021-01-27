@@ -48,6 +48,13 @@ public interface DeptService {
     List<DeptDto> queryAll(DeptQueryCriteria criteria);
 
     /**
+     * 查询所有数据(tree)
+     * @param criteria 条件参数
+     * @return List<DeptDto>
+     */
+    List<DeptDto> queryTree(DeptQueryCriteria criteria);
+
+    /**
      * 根据ID查询
      * @param id ID
      * @return DeptDto

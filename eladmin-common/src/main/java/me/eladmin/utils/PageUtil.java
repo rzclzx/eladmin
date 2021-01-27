@@ -15,7 +15,10 @@
  */
 package me.eladmin.utils;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.*;
 
 /**
@@ -57,6 +60,17 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
         Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",object);
         map.put("totalElements",totalElements);
+        return map;
+    }
+
+    /**
+     * 自定义分页结合
+     */
+    public static <T> Map<String,Object> page(List<T> list, Pageable page) {
+        Map<String,Object> map = new LinkedHashMap<>(2);
+        List<Object> pageList = PageUtil.toPage(page.getPageNumber(), page.getPageSize(), list);
+        map.put("content",pageList);
+        map.put("totalElements",list.size());
         return map;
     }
 

@@ -18,7 +18,9 @@ package me.eladmin.modules.system.rest;
 import me.eladmin.annotation.Log;
 import me.eladmin.modules.system.domain.Dept;
 import me.eladmin.modules.system.service.DeptService;
+import me.eladmin.modules.system.service.dto.DeptDto;
 import me.eladmin.modules.system.service.dto.DeptQueryCriteria;
+import me.eladmin.utils.PageUtil;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -57,6 +60,15 @@ public class DeptController {
     @PreAuthorize("@el.check('dept:list')")
     public ResponseEntity<Object> query(DeptQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(deptService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @GetMapping("tree")
+    @Log("查询树形dept")
+    @ApiOperation("查询树形dept")
+    @PreAuthorize("@el.check('dept:list')")
+    public ResponseEntity<Object> queryTree(DeptQueryCriteria criteria, Pageable pageable){
+        List<DeptDto> depts = deptService.queryTree(criteria);
+        return new ResponseEntity<>(PageUtil.page(depts, pageable),HttpStatus.OK);
     }
 
     @PostMapping

@@ -16,8 +16,9 @@
 package me.eladmin.modules.system.service.impl;
 
 import me.eladmin.modules.system.domain.Dept;
-import me.eladmin.utils.ValidationUtil;
-import me.eladmin.utils.FileUtil;
+import me.eladmin.modules.system.domain.Menu;
+import me.eladmin.modules.system.service.dto.MenuDto;
+import me.eladmin.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.eladmin.modules.system.repository.DeptRepository;
 import me.eladmin.modules.system.service.DeptService;
@@ -28,8 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.eladmin.utils.PageUtil;
-import me.eladmin.utils.QueryHelp;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -59,6 +59,13 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public List<DeptDto> queryAll(DeptQueryCriteria criteria){
         return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
+
+    @Override
+    public List<DeptDto> queryTree(DeptQueryCriteria criteria){
+        List<Dept> allDepts = deptRepository.findAll();
+        List<DeptDto> depts = Util.getTree(null, "pid", "children", deptMapper.toDto(allDepts));
+        return depts;
     }
 
     @Override

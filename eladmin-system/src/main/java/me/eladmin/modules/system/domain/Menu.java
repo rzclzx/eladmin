@@ -15,6 +15,7 @@
 */
 package me.eladmin.modules.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,6 +24,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 /**
 * @website https://el-admin.vip
