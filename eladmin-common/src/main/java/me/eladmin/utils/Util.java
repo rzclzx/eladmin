@@ -1,12 +1,36 @@
 package me.eladmin.utils;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Util {
+
+    /**
+     * 获取泛型object的属性
+     * obj 传入的对象
+     * key 属性值
+     * @return T
+     */
+    public static <T> T getProperty(T obj, String key) {
+        Field f = null;
+        try {
+            f = obj.getClass().getDeclaredField(key);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        f.setAccessible(true);
+        T val = null;
+        try {
+            val = (T)f.get(obj);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return val;
+    }
 
     /**
      * 通过pid组装list成为tree
@@ -22,34 +46,12 @@ public class Util {
 
         // stream() 用法相当于js filter 和map 方法
         List<T> list = allList.stream()
-                .filter(item -> {
-                    // 反射获取泛型对象的属性
-                    Field f = null;
-                    try {
-                        f = item.getClass().getDeclaredField(pidKey);
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
-                    f.setAccessible(true);
-                    Boolean state = false;
-                    try {
-                        state = f.get(item) == pid;
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    return state;
-                })
+                .filter(item -> Util.getProperty(item, "pid") == pid)
                 .collect(Collectors.toList());
         list.forEach(item -> {
-            Field f2 = null;
+            T id = Util.getProperty(item, "id");
             try {
-                f2 = item.getClass().getDeclaredField("id");
-                f2.setAccessible(true);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-            try {
-                T id = (T)f2.get(item);
+                // FieldUtils.writeDeclaredField方法用于设置泛型object对象的属性
                 FieldUtils.writeDeclaredField(item, childKey, getTree(id, "pid", "children", allList), true);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
