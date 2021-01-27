@@ -18,7 +18,9 @@ package me.eladmin.modules.system.rest;
 import me.eladmin.annotation.Log;
 import me.eladmin.modules.system.domain.Menu;
 import me.eladmin.modules.system.service.MenuService;
+import me.eladmin.modules.system.service.dto.MenuDto;
 import me.eladmin.modules.system.service.dto.MenuQueryCriteria;
+import me.eladmin.utils.PageUtil;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -57,6 +60,15 @@ public class MenuController {
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<Object> query(MenuQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(menuService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @GetMapping("tree")
+    @Log("查询树形menu")
+    @ApiOperation("查询树形menu")
+    @PreAuthorize("@el.check('menu:list')")
+    public ResponseEntity<Object> queryTree(MenuQueryCriteria criteria, Pageable pageable){
+        List<MenuDto> menuDtoList = menuService.queryTree(criteria);
+        return new ResponseEntity<>(PageUtil.toPage(menuDtoList, menuDtoList.size()),HttpStatus.OK);
     }
 
     @PostMapping

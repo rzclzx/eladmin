@@ -16,6 +16,8 @@
 package me.eladmin.modules.system.service.dto;
 
 import lombok.Data;
+
+import java.sql.Timestamp;
 import java.util.List;
 import me.eladmin.annotation.Query;
 
@@ -26,4 +28,6 @@ import me.eladmin.annotation.Query;
 **/
 @Data
 public class MenuQueryCriteria{
+    @Query
+    private String sort;
 }

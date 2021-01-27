@@ -16,8 +16,11 @@
 package me.eladmin.modules.system.repository;
 
 import me.eladmin.modules.system.domain.Menu;
+import me.eladmin.modules.system.service.dto.MenuDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.List;
 
 /**
 * @website https://el-admin.vip
@@ -37,4 +40,15 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     * @return /
     */
     Menu findByName(String name);
+    /**
+     * 根据 pid 查询
+     * @param pid /
+     * @return /
+     */
+    List<Menu> findByPid(Long pid);
+    /**
+     * 查询顶级菜单
+     * @return /
+     */
+    List<Menu> findByPidIsNull();
 }

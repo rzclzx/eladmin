@@ -18,6 +18,7 @@ package me.eladmin.modules.system.service.dto;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 
 /**
 * @website https://el-admin.vip
@@ -30,6 +31,9 @@ public class MenuDto implements Serializable {
 
     /** ID */
     private Long id;
+
+    /** children */
+    private List<MenuDto> children;
 
     /** 上级菜单ID */
     private Long pid;

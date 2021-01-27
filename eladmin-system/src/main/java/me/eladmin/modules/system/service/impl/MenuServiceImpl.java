@@ -18,26 +18,25 @@ package me.eladmin.modules.system.service.impl;
 import me.eladmin.modules.system.domain.Menu;
 import me.eladmin.exception.EntityExistException;
 import me.eladmin.exception.EntityExistException;
-import me.eladmin.utils.ValidationUtil;
-import me.eladmin.utils.FileUtil;
+import me.eladmin.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.eladmin.modules.system.repository.MenuRepository;
 import me.eladmin.modules.system.service.MenuService;
 import me.eladmin.modules.system.service.dto.MenuDto;
 import me.eladmin.modules.system.service.dto.MenuQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.MenuMapper;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.eladmin.utils.PageUtil;
-import me.eladmin.utils.QueryHelp;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
 * @website https://el-admin.vip
@@ -52,10 +51,41 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
 
+    private List<MenuDto> getTree(Menu menu, List<Menu> allMenus) {
+        Long pid = menu.getId();
+        List<Menu> menus = allMenus.stream()
+                .filter(item -> item.getPid() == pid)
+                .collect(Collectors.toList());
+        List<MenuDto> menuDtoList = new LinkedList<>();
+        menus.forEach(item -> {
+            MenuDto menuDto = new MenuDto();
+            BeanUtils.copyProperties(item, menuDto);
+            menuDto.setChildren(getTree(item, allMenus));
+            menuDtoList.add(menuDto);
+        });
+        return menuDtoList;
+    }
+
     @Override
     public Map<String,Object> queryAll(MenuQueryCriteria criteria, Pageable pageable){
         Page<Menu> page = menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(menuMapper::toDto));
+    }
+
+    @Override
+    public List<MenuDto> queryTree(MenuQueryCriteria criteria){
+        List<Menu> allMenus = menuRepository.findAll();
+        List<Menu> menus = allMenus.stream()
+                .filter(item -> item.getPid() == null)
+                .collect(Collectors.toList());
+        List<MenuDto> menuList = new LinkedList<>();
+        menus.forEach(item -> {
+            MenuDto menuDto = new MenuDto();
+            BeanUtils.copyProperties(item, menuDto);
+            menuDto.setChildren(this.getTree(item, allMenus));
+            menuList.add(menuDto);
+        });
+        return menuList;
     }
 
     @Override
