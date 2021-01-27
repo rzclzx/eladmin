@@ -40,15 +40,4 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     * @return /
     */
     Menu findByName(String name);
-    /**
-     * 根据 pid 查询
-     * @param pid /
-     * @return /
-     */
-    List<Menu> findByPid(Long pid);
-    /**
-     * 查询顶级菜单
-     * @return /
-     */
-    List<Menu> findByPidIsNull();
 }
