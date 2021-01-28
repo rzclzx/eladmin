@@ -19,10 +19,14 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
 * @website https://el-admin.vip
@@ -32,6 +36,8 @@ import java.io.Serializable;
 **/
 @Entity
 @Data
+@Getter
+@Setter
 @Table(name="sys_user")
 public class User implements Serializable {
 
@@ -104,6 +110,13 @@ public class User implements Serializable {
     @Column(name = "id")
     @ApiModelProperty(value = "ID")
     private Long id;
+
+    @ManyToMany
+    @JoinTable(name = "sys_users_roles",
+            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
+    @ApiModelProperty(value = "角色", hidden = true)
+    private Set<Role> roles;
 
     public void copy(User source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
