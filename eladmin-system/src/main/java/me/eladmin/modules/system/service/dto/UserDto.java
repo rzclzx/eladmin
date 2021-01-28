@@ -34,9 +34,6 @@ import java.util.Set;
 @Setter
 public class UserDto implements Serializable {
 
-    /** 部门名称 */
-    private Long deptId;
-
     /** 用户名 */
     private String username;
 
@@ -85,6 +82,14 @@ public class UserDto implements Serializable {
     /** ID */
     private Long id;
 
+    // 记一个实体通过关联表查询下面的另一个实体list（需要配置entity，Dto, Mapper）
     /** roles */
     private Set<RoleDto> roles;
+
+    /** jobs */
+    private Set<JobDto> jobs;
+
+    // 记通过本表的部门id转化为实体 （需要配置entity，Dto,去除原始dept_id字段）
+    /** dept */
+    private DeptDto dept;
 }

@@ -26,7 +26,9 @@ import org.mapstruct.ReportingPolicy;
 * @author el
 * @date 2021-01-26
 **/
-@Mapper(componentModel = "spring", uses = {RoleMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+
+// 记一个实体通过关联表查询下面的另一个实体list（需要配置entity，Dto, Mapper）
+@Mapper(componentModel = "spring", uses = {RoleMapper.class, JobMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper extends BaseMapper<UserDto, User> {
 
 }

@@ -41,10 +41,6 @@ import java.util.Set;
 @Table(name="sys_user")
 public class User implements Serializable {
 
-    @Column(name = "dept_id")
-    @ApiModelProperty(value = "部门名称")
-    private Long deptId;
-
     @Column(name = "username",unique = true)
     @ApiModelProperty(value = "用户名")
     private String username;
@@ -111,12 +107,26 @@ public class User implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
+    // 记一个实体通过关联表查询下面的另一个实体list（需要配置entity，Dto，Mapper）
     @ManyToMany
     @JoinTable(name = "sys_users_roles",
             joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
     @ApiModelProperty(value = "角色", hidden = true)
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(name = "sys_users_jobs",
+            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "job_id",referencedColumnName = "id")})
+    @ApiModelProperty(value = "岗位", hidden = true)
+    private Set<Job> jobs;
+
+    // 记通过本表的部门id转化为实体 （需要配置entity，Dto，去除原始dept_id字段）
+    @OneToOne
+    @JoinColumn(name = "dept_id")
+    @ApiModelProperty(value = "用户部门")
+    private Dept dept;
 
     public void copy(User source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

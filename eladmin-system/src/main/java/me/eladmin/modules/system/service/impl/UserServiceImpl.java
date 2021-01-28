@@ -116,7 +116,6 @@ public class UserServiceImpl implements UserService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (UserDto user : all) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("部门名称", user.getDeptId());
             map.put("用户名", user.getUsername());
             map.put("昵称", user.getNickName());
             map.put("性别", user.getGender());
