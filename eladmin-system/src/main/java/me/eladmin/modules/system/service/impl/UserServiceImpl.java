@@ -26,6 +26,7 @@ import me.eladmin.modules.system.service.UserService;
 import me.eladmin.modules.system.service.dto.UserDto;
 import me.eladmin.modules.system.service.dto.UserQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.UserMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String,Object> queryAll(UserQueryCriteria criteria, Pageable pageable){
+        pageable.getSortOr(QueryHelp.getSort(criteria.getSort()));
         Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(userMapper::toDto));
     }

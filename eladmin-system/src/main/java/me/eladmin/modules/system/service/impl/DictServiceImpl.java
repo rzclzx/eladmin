@@ -52,6 +52,7 @@ public class DictServiceImpl implements DictService {
 
     @Override
     public Map<String,Object> queryAll(DictQueryCriteria criteria, Pageable pageable){
+        pageable.getSortOr(QueryHelp.getSort(criteria.getSort()));
         Page<Dict> page = dictRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(dictMapper::toDto));
     }

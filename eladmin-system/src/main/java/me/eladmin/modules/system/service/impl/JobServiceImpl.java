@@ -53,6 +53,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable){
+        pageable.getSortOr(QueryHelp.getSort(criteria.getSort()));
         Page<Job> page = jobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(jobMapper::toDto));
     }

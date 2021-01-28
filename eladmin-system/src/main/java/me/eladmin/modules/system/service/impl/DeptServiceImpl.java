@@ -64,7 +64,8 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public List<DeptDto> queryTree(DeptQueryCriteria criteria){
         List<Dept> allDepts = deptRepository.findAll(
-                (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)
+                (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),
+                QueryHelp.getSort(criteria.getSort())
         );
         List<DeptDto> depts = Util.getTree(null, "pid", "children", deptMapper.toDto(allDepts));
         return depts;

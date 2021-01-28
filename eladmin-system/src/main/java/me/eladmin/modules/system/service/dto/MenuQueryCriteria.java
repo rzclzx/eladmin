@@ -31,6 +31,5 @@ public class MenuQueryCriteria{
     @Query(blurry = "title")
     private String blurry;
 
-    @Query
     private String sort;
 }

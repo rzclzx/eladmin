@@ -204,10 +204,17 @@ public class QueryHelp {
     }
 
     public static Sort getSort(String sort) {
-        if (sort == null) {
-            sort = "id";
+        String val = "id";
+        Sort.Direction rule = Sort.Direction.DESC;
+        if (sort != null) {
+            String[] list = sort.split(",");
+            val = list[0];
+            // 记 数组不存在直接访问会报错
+            if (list.length > 1) {
+                rule = "asc".equals(list[1]) ? Sort.Direction.ASC : Sort.Direction.DESC;
+            }
         }
-        Sort s = new Sort(Sort.Direction.ASC, sort);
+        Sort s = new Sort(rule, val);
         return s;
     }
 }

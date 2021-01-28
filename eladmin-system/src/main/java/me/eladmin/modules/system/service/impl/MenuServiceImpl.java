@@ -17,7 +17,6 @@ package me.eladmin.modules.system.service.impl;
 
 import me.eladmin.modules.system.domain.Menu;
 import me.eladmin.exception.EntityExistException;
-import me.eladmin.exception.EntityExistException;
 import me.eladmin.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.eladmin.modules.system.repository.MenuRepository;
@@ -25,8 +24,6 @@ import me.eladmin.modules.system.service.MenuService;
 import me.eladmin.modules.system.service.dto.MenuDto;
 import me.eladmin.modules.system.service.dto.MenuQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.MenuMapper;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -35,8 +32,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.*;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
 * @website https://el-admin.vip
