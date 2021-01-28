@@ -16,11 +16,15 @@
 package me.eladmin.modules.system.service.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import me.eladmin.modules.system.domain.Menu;
 
 import java.sql.Timestamp;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
 * @website https://el-admin.vip
@@ -29,6 +33,8 @@ import java.util.List;
 * @date 2021-01-26
 **/
 @Data
+@Setter
+@Getter
 public class RoleDto implements Serializable {
 
     /** 名称 */
@@ -59,5 +65,5 @@ public class RoleDto implements Serializable {
     private Long id;
 
     /** menus */
-    private List<Menu> menus;
+    private Set<MenuDto> menus;
 }

@@ -19,10 +19,15 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 /**
 * @website https://el-admin.vip
@@ -31,6 +36,8 @@ import java.io.Serializable;
 * @date 2021-01-26
 **/
 @Entity
+@Getter
+@Setter
 @Data
 @Table(name="sys_role")
 public class Role implements Serializable {
@@ -39,6 +46,13 @@ public class Role implements Serializable {
     @NotBlank
     @ApiModelProperty(value = "名称")
     private String name;
+
+    @ManyToMany
+    @JoinTable(name = "sys_roles_menus",
+            joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "menu_id",referencedColumnName = "id")})
+    @ApiModelProperty(value = "菜单", hidden = true)
+    private Set<Menu> menus;
 
     @Column(name = "level")
     @ApiModelProperty(value = "角色级别")

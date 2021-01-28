@@ -35,6 +35,8 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 * @date ${date}
 **/
 @Data
+@Getter
+@Setter
 public class ${className}Dto implements Serializable {
 <#if columns??>
     <#list columns as column>

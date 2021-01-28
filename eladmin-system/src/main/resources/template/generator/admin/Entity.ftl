@@ -44,6 +44,8 @@ import java.io.Serializable;
 **/
 @Entity
 @Data
+@Getter
+@Setter
 @Table(name="${tableName}")
 public class ${className} implements Serializable {
 <#if columns??>
