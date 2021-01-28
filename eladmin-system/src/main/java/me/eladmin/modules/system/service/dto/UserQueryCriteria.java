@@ -26,4 +26,6 @@ import me.eladmin.annotation.Query;
 **/
 @Data
 public class UserQueryCriteria{
+    @Query(blurry = "email,username,nickName")
+    private String blurry;
 }

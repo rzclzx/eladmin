@@ -26,4 +26,6 @@ import me.eladmin.annotation.Query;
 **/
 @Data
 public class JobQueryCriteria{
+    @Query(blurry = "name")
+    private String blurry;
 }

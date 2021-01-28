@@ -21,6 +21,8 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.eladmin.annotation.DataPermission;
 import me.eladmin.annotation.Query;
+import org.springframework.data.domain.Sort;
+
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -199,5 +201,13 @@ public class QueryHelp {
             getAllFields(clazz.getSuperclass(), fields);
         }
         return fields;
+    }
+
+    public static Sort getSort(String sort) {
+        if (sort == null) {
+            sort = "id";
+        }
+        Sort s = new Sort(Sort.Direction.ASC, sort);
+        return s;
     }
 }

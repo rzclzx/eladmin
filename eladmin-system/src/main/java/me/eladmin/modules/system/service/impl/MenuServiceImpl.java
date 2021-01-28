@@ -59,7 +59,10 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDto> queryTree(MenuQueryCriteria criteria){
-        List<Menu> allMenus = menuRepository.findAll();
+        List<Menu> allMenus = menuRepository.findAll(
+                (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),
+                QueryHelp.getSort(criteria.getSort())
+        );
         List<MenuDto> menus = Util.getTree(null, "pid", "children", menuMapper.toDto(allMenus));
         return menus;
     }

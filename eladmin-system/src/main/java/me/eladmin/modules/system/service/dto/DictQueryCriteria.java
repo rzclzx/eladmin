@@ -26,4 +26,6 @@ import me.eladmin.annotation.Query;
 **/
 @Data
 public class DictQueryCriteria{
+    @Query(blurry = "name,description")
+    private String blurry;
 }

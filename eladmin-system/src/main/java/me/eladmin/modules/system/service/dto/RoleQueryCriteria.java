@@ -26,6 +26,6 @@ import me.eladmin.annotation.Query;
 **/
 @Data
 public class RoleQueryCriteria{
-    @Query
-    private String sort;
+    @Query(blurry = "name")
+    private String blurry;
 }
