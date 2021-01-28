@@ -26,6 +26,8 @@ import me.eladmin.modules.system.service.UserService;
 import me.eladmin.modules.system.service.dto.UserDto;
 import me.eladmin.modules.system.service.dto.UserQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.UserMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,12 +50,14 @@ import java.util.LinkedHashMap;
 **/
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "user")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public Map<String,Object> queryAll(UserQueryCriteria criteria, Pageable pageable){
         pageable.getSortOr(QueryHelp.getSort(criteria.getSort()));
         Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
