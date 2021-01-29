@@ -53,6 +53,9 @@ public class MenuDto implements Serializable {
     /** 组件 */
     private String component;
 
+    /** 组件name */
+    private String componentName;
+
     /** 排序 */
     private Integer menuSort;
 

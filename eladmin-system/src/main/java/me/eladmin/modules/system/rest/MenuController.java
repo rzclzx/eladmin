@@ -21,6 +21,7 @@ import me.eladmin.modules.system.service.MenuService;
 import me.eladmin.modules.system.service.dto.MenuDto;
 import me.eladmin.modules.system.service.dto.MenuQueryCriteria;
 import me.eladmin.utils.PageUtil;
+import me.eladmin.utils.SecurityUtils;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,14 @@ public class MenuController {
     public ResponseEntity<Object> queryTree(MenuQueryCriteria criteria, Pageable pageable){
         List<MenuDto> menuDtoList = menuService.queryTree(criteria);
         return new ResponseEntity<>(PageUtil.page(menuDtoList, pageable),HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/build")
+    @ApiOperation("获取前端所需菜单")
+    public ResponseEntity<Object> buildMenus(){
+        List<MenuDto> menuDtoList = menuService.findByUser(SecurityUtils.getCurrentUserId());
+        List<MenuDto> menuDtos = menuService.buildTree(menuDtoList);
+        return new ResponseEntity<>(menuService.buildMenus(menuDtos),HttpStatus.OK);
     }
 
     @PostMapping

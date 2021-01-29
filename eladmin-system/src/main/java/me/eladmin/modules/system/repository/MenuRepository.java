@@ -19,8 +19,11 @@ import me.eladmin.modules.system.domain.Menu;
 import me.eladmin.modules.system.service.dto.MenuDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
 * @website https://el-admin.vip
@@ -40,4 +43,8 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     * @return /
     */
     Menu findByName(String name);
+
+    @Query(value = "SELECT m.* FROM sys_menu m, sys_roles_menus r WHERE " +
+            "m.id = r.menu_id AND r.role_id IN ?1 AND type != ?2 order by m.menu_sort asc",nativeQuery = true)
+    LinkedHashSet<Menu> findByRoleIdsAndTypeNot(Set<Long> roleIds, int type);
 }

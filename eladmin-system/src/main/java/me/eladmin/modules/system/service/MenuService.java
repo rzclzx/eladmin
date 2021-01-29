@@ -48,11 +48,32 @@ public interface MenuService {
     List<MenuDto> queryTree(MenuQueryCriteria criteria);
 
     /**
+     * 构建菜单树
+     * @param menuDtos 原始数据
+     * @return /
+     */
+    List<MenuDto> buildTree(List<MenuDto> menuDtos);
+
+    /**
+     * 构建菜单树
+     * @param menuDtos /
+     * @return /
+     */
+    Object buildMenus(List<MenuDto> menuDtos);
+
+    /**
     * 查询所有数据不分页
     * @param criteria 条件参数
     * @return List<MenuDto>
     */
     List<MenuDto> queryAll(MenuQueryCriteria criteria);
+
+    /**
+     * 根据当前用户获取菜单
+     * @param currentUserId /
+     * @return /
+     */
+    List<MenuDto> findByUser(Long currentUserId);
 
     /**
      * 根据ID查询

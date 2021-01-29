@@ -15,8 +15,14 @@
 */
 package me.eladmin.modules.system.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import me.eladmin.modules.system.domain.Menu;
 import me.eladmin.exception.EntityExistException;
+import me.eladmin.modules.system.domain.vo.MenuMetaVo;
+import me.eladmin.modules.system.domain.vo.MenuVo;
+import me.eladmin.modules.system.service.RoleService;
+import me.eladmin.modules.system.service.dto.RoleDto;
 import me.eladmin.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.eladmin.modules.system.repository.MenuRepository;
@@ -24,6 +30,7 @@ import me.eladmin.modules.system.service.MenuService;
 import me.eladmin.modules.system.service.dto.MenuDto;
 import me.eladmin.modules.system.service.dto.MenuQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.MenuMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -31,6 +38,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -45,6 +53,7 @@ public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
+    private final RoleService roleService;
 
     @Override
     public Map<String,Object> queryAll(MenuQueryCriteria criteria, Pageable pageable){
@@ -63,8 +72,95 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    public List<MenuDto> buildTree(List<MenuDto> menuDtos) {
+        List<MenuDto> trees = new ArrayList<>();
+        Set<Long> ids = new HashSet<>();
+        for (MenuDto menuDTO : menuDtos) {
+            if (menuDTO.getPid() == null) {
+                trees.add(menuDTO);
+            }
+            for (MenuDto it : menuDtos) {
+                if (menuDTO.getId().equals(it.getPid())) {
+                    if (menuDTO.getChildren() == null) {
+                        menuDTO.setChildren(new ArrayList<>());
+                    }
+                    menuDTO.getChildren().add(it);
+                    ids.add(it.getId());
+                }
+            }
+        }
+        if(trees.size() == 0){
+            trees = menuDtos.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
+        }
+        return trees;
+    }
+
+    @Override
+    public List<MenuVo> buildMenus(List<MenuDto> menuDtos) {
+        List<MenuVo> list = new LinkedList<>();
+        menuDtos.forEach(menuDTO -> {
+                    if (menuDTO!=null){
+                        List<MenuDto> menuDtoList = menuDTO.getChildren();
+                        MenuVo menuVo = new MenuVo();
+                        menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getTitle());
+                        // 一级目录需要加斜杠，不然会报警告
+                        menuVo.setPath(menuDTO.getPid() == null ? "/" + menuDTO.getPath() :menuDTO.getPath());
+                        menuVo.setHidden(menuDTO.getHidden());
+                        // 如果不是外链
+                        if(!menuDTO.getIFrame()){
+                            if(menuDTO.getPid() == null){
+                                menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
+                            }else if(!StrUtil.isEmpty(menuDTO.getComponent())){
+                                menuVo.setComponent(menuDTO.getComponent());
+                            }
+                        }
+                        menuVo.setMeta(new MenuMetaVo(menuDTO.getTitle(),menuDTO.getIcon(),!menuDTO.getCache()));
+                        if(menuDtoList !=null && menuDtoList.size()!=0){
+                            menuVo.setAlwaysShow(true);
+                            menuVo.setRedirect("noredirect");
+                            menuVo.setChildren(buildMenus(menuDtoList));
+                            // 处理是一级菜单并且没有子菜单的情况
+                        } else if(menuDTO.getPid() == null){
+                            MenuVo menuVo1 = new MenuVo();
+                            menuVo1.setMeta(menuVo.getMeta());
+                            // 非外链
+                            if(!menuDTO.getIFrame()){
+                                menuVo1.setPath("index");
+                                menuVo1.setName(menuVo.getName());
+                                menuVo1.setComponent(menuVo.getComponent());
+                            } else {
+                                menuVo1.setPath(menuDTO.getPath());
+                            }
+                            menuVo.setName(null);
+                            menuVo.setMeta(null);
+                            menuVo.setComponent("Layout");
+                            List<MenuVo> list1 = new ArrayList<>();
+                            list1.add(menuVo1);
+                            menuVo.setChildren(list1);
+                        }
+                        list.add(menuVo);
+                    }
+                }
+        );
+        return list;
+    }
+
+    @Override
     public List<MenuDto> queryAll(MenuQueryCriteria criteria){
         return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
+
+    /**
+     * 用户角色改变时需清理缓存
+     * @param currentUserId /
+     * @return /
+     */
+    @Override
+    public List<MenuDto> findByUser(Long currentUserId) {
+        List<RoleDto> roles = roleService.findByUsersId(currentUserId);
+        Set<Long> roleIds = roles.stream().map(RoleDto::getId).collect(Collectors.toSet());
+        LinkedHashSet<Menu> menus = menuRepository.findByRoleIdsAndTypeNot(roleIds, 2);
+        return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

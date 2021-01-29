@@ -15,6 +15,7 @@
 */
 package me.eladmin.modules.system.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +56,7 @@ public class UserDto implements Serializable {
     /** 头像真实路径 */
     private String avatarPath;
 
+    @JsonIgnore
     /** 密码 */
     private String password;
 
