@@ -51,14 +51,12 @@ import java.util.LinkedHashMap;
 **/
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "user")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
     public Map<String,Object> queryAll(UserQueryCriteria criteria, Pageable pageable){
         pageable.getSortOr(QueryHelp.getSort(criteria.getSort()));
         Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
@@ -79,7 +77,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(key = "'username:' + #p0")
     public UserDto findByName(String userName) {
         User user = userRepository.findByUsername(userName);
         if (user == null) {

@@ -21,6 +21,8 @@ import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -93,10 +95,12 @@ public class User implements Serializable {
     @ApiModelProperty(value = "修改密码的时间")
     private Timestamp pwdResetTime;
 
-    @Column(name = "create_time")
+    @CreationTimestamp
+    @Column(name = "create_time", updatable = false)
     @ApiModelProperty(value = "创建日期")
     private Timestamp createTime;
 
+    @UpdateTimestamp
     @Column(name = "update_time")
     @ApiModelProperty(value = "更新时间")
     private Timestamp updateTime;
