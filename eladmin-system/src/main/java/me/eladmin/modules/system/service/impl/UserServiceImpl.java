@@ -28,6 +28,7 @@ import me.eladmin.modules.system.service.dto.UserQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.UserMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import me.eladmin.exception.EntityNotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +76,17 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseGet(User::new);
         ValidationUtil.isNull(user.getId(),"User","id",id);
         return userMapper.toDto(user);
+    }
+
+    @Override
+    @Cacheable(key = "'username:' + #p0")
+    public UserDto findByName(String userName) {
+        User user = userRepository.findByUsername(userName);
+        if (user == null) {
+            throw new EntityNotFoundException(User.class, "name", userName);
+        } else {
+            return userMapper.toDto(user);
+        }
     }
 
     @Override

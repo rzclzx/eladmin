@@ -55,6 +55,13 @@ public interface UserService {
     UserDto findById(Long id);
 
     /**
+     * 根据用户名查询
+     * @param userName /
+     * @return /
+     */
+    UserDto findByName(String userName);
+
+    /**
     * 创建
     * @param resources /
     * @return UserDto

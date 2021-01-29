@@ -61,8 +61,8 @@ public class UserDto implements Serializable {
     /** 是否为admin账号 */
     private Boolean isAdmin;
 
-    /** 状态：1启用、0禁用 */
-    private Long enabled;
+    /** 状态： */
+    private Boolean enabled;
 
     /** 创建者 */
     private String createBy;

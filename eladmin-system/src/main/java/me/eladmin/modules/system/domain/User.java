@@ -79,7 +79,7 @@ public class User implements Serializable {
 
     @Column(name = "enabled")
     @ApiModelProperty(value = "状态：1启用、0禁用")
-    private Long enabled;
+    private Boolean enabled;
 
     @Column(name = "create_by")
     @ApiModelProperty(value = "创建者")

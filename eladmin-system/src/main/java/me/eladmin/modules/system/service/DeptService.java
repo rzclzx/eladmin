@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Map;
 import java.util.List;
 import java.io.IOException;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -60,6 +61,27 @@ public interface DeptService {
      * @return DeptDto
      */
     DeptDto findById(Long id);
+
+    /**
+     * 根据角色ID查询
+     * @param id /
+     * @return /
+     */
+    Set<Dept> findByRoleId(Long id);
+
+    /**
+     * 根据PID查询
+     * @param pid /
+     * @return /
+     */
+    List<Dept> findByPid(long pid);
+
+    /**
+     * 获取
+     * @param deptList
+     * @return
+     */
+    List<Long> getDeptChildren(List<Dept> deptList);
 
     /**
     * 创建

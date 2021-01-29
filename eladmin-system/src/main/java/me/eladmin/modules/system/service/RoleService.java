@@ -18,7 +18,10 @@ package me.eladmin.modules.system.service;
 import me.eladmin.modules.system.domain.Role;
 import me.eladmin.modules.system.service.dto.RoleDto;
 import me.eladmin.modules.system.service.dto.RoleQueryCriteria;
+import me.eladmin.modules.system.service.dto.UserDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+
 import java.util.Map;
 import java.util.List;
 import java.io.IOException;
@@ -53,6 +56,20 @@ public interface RoleService {
      * @return RoleDto
      */
     RoleDto findById(Long id);
+
+    /**
+     * 根据用户ID查询
+     * @param id 用户ID
+     * @return /
+     */
+    List<RoleDto> findByUsersId(Long id);
+
+    /**
+     * 获取用户权限信息
+     * @param user 用户信息
+     * @return 权限信息
+     */
+    List<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
 
     /**
     * 创建

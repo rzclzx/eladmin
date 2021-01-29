@@ -15,28 +15,30 @@
 */
 package me.eladmin.modules.system.service.impl;
 
+import me.eladmin.modules.system.domain.Menu;
 import me.eladmin.modules.system.domain.Role;
 import me.eladmin.exception.EntityExistException;
-import me.eladmin.utils.ValidationUtil;
-import me.eladmin.utils.FileUtil;
+import me.eladmin.modules.system.service.dto.UserDto;
+import me.eladmin.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.eladmin.modules.system.repository.RoleRepository;
 import me.eladmin.modules.system.service.RoleService;
 import me.eladmin.modules.system.service.dto.RoleDto;
 import me.eladmin.modules.system.service.dto.RoleQueryCriteria;
 import me.eladmin.modules.system.service.mapstruct.RoleMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.eladmin.utils.PageUtil;
-import me.eladmin.utils.QueryHelp;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
 * @website https://el-admin.vip
@@ -46,6 +48,7 @@ import java.util.LinkedHashMap;
 **/
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "role")
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -69,6 +72,29 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findById(id).orElseGet(Role::new);
         ValidationUtil.isNull(role.getId(),"Role","id",id);
         return roleMapper.toDto(role);
+    }
+
+    @Override
+    public List<RoleDto> findByUsersId(Long id) {
+        return roleMapper.toDto(new ArrayList<>(roleRepository.findByUserId(id)));
+    }
+
+    @Override
+    @Cacheable(key = "'auth:' + #p0.id")
+    public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+        Set<String> permissions = new HashSet<>();
+        // 如果是管理员直接返回
+        if (user.getIsAdmin()) {
+            permissions.add("admin");
+            return permissions.stream().map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        }
+        Set<Role> roles = roleRepository.findByUserId(user.getId());
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
+                .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
+                .map(Menu::getPermission).collect(Collectors.toSet());
+        return permissions.stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override

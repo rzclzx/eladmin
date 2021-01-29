@@ -30,12 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
 * @website https://el-admin.vip
@@ -77,6 +74,32 @@ public class DeptServiceImpl implements DeptService {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
         ValidationUtil.isNull(dept.getId(),"Dept","id",id);
         return deptMapper.toDto(dept);
+    }
+
+    @Override
+    public Set<Dept> findByRoleId(Long id) {
+        return deptRepository.findByRoleId(id);
+    }
+
+    @Override
+    public List<Dept> findByPid(long pid) {
+        return deptRepository.findByPid(pid);
+    }
+
+    @Override
+    public List<Long> getDeptChildren(List<Dept> deptList) {
+        List<Long> list = new ArrayList<>();
+        deptList.forEach(dept -> {
+                    if (dept!=null && dept.getEnabled()) {
+                        List<Dept> depts = deptRepository.findByPid(dept.getId());
+                        if (deptList.size() != 0) {
+                            list.addAll(getDeptChildren(depts));
+                        }
+                        list.add(dept.getId());
+                    }
+                }
+        );
+        return list;
     }
 
     @Override
